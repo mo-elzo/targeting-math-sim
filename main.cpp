@@ -47,7 +47,7 @@ glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 float mockGroundSpeedX = 5.0f; // m/s
-float mockGroundSpeedZ = 4.0f; // m/s
+float mockGroundSpeedZ = 0.0f; // m/s
 float timeSimInterval = 0.5f; // s
 
 float cameraSpeed = 10.0f;
@@ -416,9 +416,9 @@ void displayFirstShape(Shader shader, GLuint vao)
 
 void displayPositions(){
     cout << "\nPitch: " << pitch << " Roll: " << roll << " Yaw: " << yaw << endl;
-    cout << "CameraPos: " << cameraPos[0] << ", " << cameraPos[1] << ", " << cameraPos[2] << endl;
+    cout << "CameraPos: " << cameraPos[0]*2 << "m, " << cameraPos[1]*2 << "m, " << cameraPos[2]*2 << "m" << endl;
     cout << "Mock Speed: x: " << mockGroundSpeedX << "m/s, z: " << mockGroundSpeedZ << "m/s" << endl;
-    cout << "ObjectPos: " << translateOneX << ", " << "0, " << translateOneZ << endl;
+    cout << "ObjectPos: " << translateOneX*2 << "m, " << "0m, " << translateOneZ*2 << "m" << endl;
 }
 
 void processInput(GLFWwindow* window)
@@ -544,15 +544,19 @@ void processInput(GLFWwindow* window)
     }
 
     if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS) {
-        roll -= 0.001f;
-        glm::mat4 roll_mat = glm::rotate(glm::mat4(1.0f), glm::radians(roll), cameraFront);
+        roll -= 0.25f;
+        if (roll > 360) roll -= 360;
+        glm::mat4 roll_mat = glm::rotate(glm::mat4(1.0f), glm::radians(-0.25f), cameraFront);
         cameraUp = normalize(glm::mat3(roll_mat) * cameraUp);
+        cout << roll << endl;
     }
 
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
-        roll += 0.001f;
-        glm::mat4 roll_mat = glm::rotate(glm::mat4(1.0f), glm::radians(roll), cameraFront);
+        roll += 0.25f;
+        if (roll > 360) roll -= 360;
+        glm::mat4 roll_mat = glm::rotate(glm::mat4(1.0f), glm::radians(0.25f), cameraFront);
         cameraUp = normalize(glm::mat3(roll_mat) * cameraUp);
+        cout << roll << endl;
     }
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
