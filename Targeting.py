@@ -22,14 +22,15 @@ def coor_camera_to_inertial_frame (x,y,z,roll,yaw,pitch,g_roll, g_yaw, g_pitch,c
 
 #given
     #target coord in camera
-    target_pix = np.array([[400],[-250],[5],[1]]) #x_pix,y_pix, l= depth, last is always 1
+    pix = np.array([[400],[-250],[1],[1]]) #x_pix,y_pix, l= depth, last is always 1
     #distance of center of rotaion of gimbal from centroid of PA
     g_dist = np.array([0,-1,0])
     #distance of camera center vision from center of rotation of gimbal
     c_dis = np.array([0,-1,0])
 
     #depth (given by lidar and other method)
-    #l =np.array([[-3,0,0],[0,-3,0],[0,0,-3]])
+    l =np.array([[-3,0,0,0],[0,-3,0,0],[0,0,-3,0],[0,0,0,1]])
+    target_pix = np.dot(l,pix)
 
     #pixel_to_coord
     #CCM_inv=camera_calibration_matrix(1,1,0,2,3)
