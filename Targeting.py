@@ -2,16 +2,27 @@ import numpy as np
 import pandas as pd
 import copy
 import os, shutil
-from Transformation_matrices import Transformation_translation, Transformation_rotaion,camera_calibration_matrix
+from Transformation_matrices import Transformation_translation, Transformation_rotaion,camera_calibration_matrix, camera_calibration_matrix_2
 #from pythonProject_1.Functions import Transformation_translation
 
 
 
-def coor_camera_to_inertial_frame (x,y,z,roll,yaw,pitch,g_roll, g_yaw, g_pitch):
+def coor_camera_to_inertial_frame (x,y,z,roll,yaw,pitch,g_roll, g_yaw, g_pitch,calibration):
+#camera calibration
+    if(calibration):
+        CCM = camera_calibration_matrix_2()
+
+        CCM_inv = np.linalg.inv(CCM)
+        column_to_be_added = np.array([[0], [0], [0]])
+
+        # Adding column to array using append() method
+        CCM_inv = np.append(CCM_inv, column_to_be_added, axis=1)
+        newrow = [0, 0, 0, 1]
+        CCM_inv= np.vstack([CCM_inv, newrow])
 
 #given
     #target coord in camera
-    target_pix = np.array([[0],[-2],[-5],[1]]) #x_pix,y_pix, l= depth
+    target_pix = np.array([[400],[-250],[5],[1]]) #x_pix,y_pix, l= depth, last is always 1
     #distance of center of rotaion of gimbal from centroid of PA
     g_dist = np.array([0,-1,0])
     #distance of camera center vision from center of rotation of gimbal
@@ -21,7 +32,7 @@ def coor_camera_to_inertial_frame (x,y,z,roll,yaw,pitch,g_roll, g_yaw, g_pitch):
     #l =np.array([[-3,0,0],[0,-3,0],[0,0,-3]])
 
     #pixel_to_coord
-    CCM_inv=camera_calibration_matrix(1,1,0,2,3)
+    #CCM_inv=camera_calibration_matrix(1,1,0,2,3)
     camera_frame = np.dot(CCM_inv, target_pix)
 
     #transformation_camera_gimbal
@@ -58,7 +69,7 @@ def coor_camera_to_inertial_frame (x,y,z,roll,yaw,pitch,g_roll, g_yaw, g_pitch):
 
     return latitude,longitude,height
 if __name__ == '__main__':
-    coor_camera_to_inertial_frame (x = 1,y = 1, z = 1,roll=np.pi/2,yaw=0,pitch=0,g_roll=0, g_yaw=0, g_pitch=0)
+    coor_camera_to_inertial_frame (x = 1,y = 1, z = 1,roll=np.pi/2,yaw=0,pitch=0,g_roll=0, g_yaw=0, g_pitch=0, calibration = True)
 #xyz = longitude,latitude and height of PA
 #g_a_dist = distance in x y z from the centroi of PA to gimbal
 #g_roll, g_yaw, g_pitch = gimbal's rotation
