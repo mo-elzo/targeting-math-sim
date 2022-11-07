@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import copy
 import os, shutil
-from Transformation_matrices import Transformation_translation, Transformation_rotaion,camera_calibration_matrix, camera_calibration_matrix_2
+from Transformation_matrices import Transformation_translation, Transformation_rotation,camera_calibration_matrix, camera_calibration_matrix_2
 #from pythonProject_1.Functions import Transformation_translation
 
 
@@ -23,7 +23,7 @@ def coor_camera_to_inertial_frame (x,y,z,roll,yaw,pitch,g_roll, g_yaw, g_pitch,c
 #given
     #target coord in camera
     pix = np.array([[400],[-250],[1],[1]]) #x_pix,y_pix, l= depth, last is always 1
-    #distance of center of rotaion of gimbal from centroid of PA
+    #distance of center of rotation of gimbal from centroid of PA
     g_dist = np.array([0,-1,0])
     #distance of camera center vision from center of rotation of gimbal
     c_dis = np.array([0,-1,0])
@@ -42,14 +42,14 @@ def coor_camera_to_inertial_frame (x,y,z,roll,yaw,pitch,g_roll, g_yaw, g_pitch,c
 
 
     # Transformation_gimbal_body
-    rot_g = Transformation_rotaion(g_roll, g_yaw, g_pitch)
+    rot_g = Transformation_rotation(g_roll, g_yaw, g_pitch)
     gimbal_frame = np.dot(rot_g[0], gimbal_frame)
 
     trans_g = Transformation_translation(g_dist[0], g_dist[1], g_dist[2])
     body_frame= np.dot(trans_g[1], gimbal_frame)
 
     #Transformation_body_vehicule
-    rot_v = Transformation_rotaion(roll,yaw,pitch)
+    rot_v = Transformation_rotation(roll,yaw,pitch)
 
     vehicule_frame = np.dot(rot_v[0],body_frame)
 

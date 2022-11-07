@@ -70,7 +70,7 @@ def Transformation_translation(x, y, z):
     T_translation_inverse = np.linalg.inv(T_translation)
     return T_translation, T_translation_inverse
 
-def Transformation_rotaion(phi,psi,t):
+def Transformation_rotation(phi,psi,t):
     #phi = roll
     #psi = yaw
     #t = pitch
